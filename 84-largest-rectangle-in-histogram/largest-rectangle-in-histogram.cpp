@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st; // stores indices
+        int maxArea = 0;
+        int n = heights.size();
+        
+        for (int i = 0; i < n; i++) {
+            // While current bar is shorter than stack top
+            // Calculate area with stack top as the smallest bar
+            while (!st.empty() && heights[st.top()] > heights[i]) {
+                int height = heights[st.top()];
+                st.pop();
+                
+                // Width: from the bar after new stack top to current position
+                int width = st.empty() ? i : i - st.top() - 1;
+                maxArea = max(maxArea, height * width);
+            }
+            
+            st.push(i);
+        }
+        
+        // Process remaining bars in stack
+        while (!st.empty()) {
+            int height = heights[st.top()];
+            st.pop();
+            int width = st.empty() ? n : n - st.top() - 1;
+            maxArea = max(maxArea, height * width);
+        }
+        
+        return maxArea;
+    }
+};
